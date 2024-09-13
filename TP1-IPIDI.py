@@ -20,7 +20,6 @@ def ajustarLuminanciaSaturacion(imagen, coefLuminancia=1.0, coefSaturacion=1.0):
     """Ajusta la luminancia y saturación de la imagen, manejando imágenes con canal alfa."""
     # Convertir imagen a array y normalizar valores de RGB
     arrayImagen = np.asarray(imagen) / 255.0
-
     # Si la imagen tiene un canal alfa, sepáralo
     if arrayImagen.shape[-1] == 4:
         arrayRgb = arrayImagen[..., :3]  # Excluye el canal alfa
@@ -33,7 +32,7 @@ def ajustarLuminanciaSaturacion(imagen, coefLuminancia=1.0, coefSaturacion=1.0):
     
     # Ajustar luminancia y saturación
     yiq[..., 0] *= coefLuminancia  # Ajuste de luminancia
-    yiq[..., 1] *= coefSaturacion  # Ajuste de saturación en I
+    yiq[..., 1] *= coefSaturacion  # Ajuste de satugit commitración en I
     yiq[..., 2] *= coefSaturacion  # Ajuste de saturación en Q
     
     # Asegurarse de que los valores están en el rango permitido
@@ -54,11 +53,11 @@ def ajustarLuminanciaSaturacion(imagen, coefLuminancia=1.0, coefSaturacion=1.0):
     return Image.fromarray(rgb)
 
 # Cargar una imagen
-imagen = Image.open("ruta/imagen.jpg")
+imagen = Image.open("C:/Users/Gustavo Nelles/Pictures/ultima final.jpg")
 
 # Ajustar luminancia y saturación
-coefLuminancia = 1.2  # Coeficiente de luminancia
-coefSaturacion = 0.8  # Coeficiente de saturación
+coefLuminancia = 1  # Coeficiente de luminancia
+coefSaturacion = 0 # Coeficiente de saturación
 imagenProcesada = ajustarLuminanciaSaturacion(imagen, coefLuminancia, coefSaturacion)
 
 # Mostrar la imagen original y la procesada
