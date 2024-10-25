@@ -16,16 +16,23 @@ def apertura(imagen):
 def cierre(imagen):
     return erosion(dilatacion(imagen))
 
-def borde_morfologico(imagen):
-    ancho, alto = imagen.size
-    imagen_dilatada = dilatacion(imagen)  # Obtener la imagen dilatada
+def borde_morfologico_externo(imagen):
+    imagen_dilatada = dilatacion(imagen)  
     imagen_dilatada_np = np.array(imagen_dilatada)  # Convertir a arreglo NumPy
     imagen_original_np = np.array(imagen.convert("L"))  # Asegurarse de que la imagen esté en escala de grises
 
     # Calcular el borde exterior restando la imagen original de la dilatada
     nueva_imagen = np.clip(imagen_dilatada_np - imagen_original_np, 0, 255)  # Asegura que los valores estén en el rango 0-255
     return Image.fromarray(nueva_imagen.astype(np.uint8))  # Asegúrate de que los valores son del tipo adecuado
+def borde_morfologico_interno(imagen):
+   
+    imagen_dilatada = erosion(imagen)  
+    imagen_dilatada_np = np.array(imagen_dilatada)  # Convertir a arreglo NumPy
+    imagen_original_np = np.array(imagen.convert("L"))  # Asegurarse de que la imagen esté en escala de grises
 
+    # Calcular el borde exterior restando la imagen original de la dilatada
+    nueva_imagen = np.clip(imagen_original_np - imagen_dilatada_np, 0, 255)  # Asegura que los valores estén en el rango 0-255
+    return Image.fromarray(nueva_imagen.astype(np.uint8))  # Asegúrate de que los valores son del tipo adecuado
 
 def mediana(imagen):
     return aplicar_operacion_morfologica(imagen, np.median)
@@ -73,7 +80,7 @@ class AplicacionFiltros:
         # Menú desplegable para filtros
         self.filtro_var = StringVar(root)
         self.filtro_var.set("Erosión")
-        opciones_filtros = ["Erosión", "Dilatación", "Apertura", "Cierre", "Borde Morfológico", "Mediana"]
+        opciones_filtros = ["Erosión", "Dilatación", "Apertura", "Cierre", "Borde Morfológico Externo","Borde Morfológico Interno", "Mediana"]
         self.menu_filtros = OptionMenu(root, self.filtro_var, *opciones_filtros)
         self.menu_filtros.grid(row=3, column=1)
 
@@ -101,8 +108,10 @@ class AplicacionFiltros:
                 self.imagen_filtrada = apertura(self.imagen_original)
             elif filtro == "Cierre":
                 self.imagen_filtrada = cierre(self.imagen_original)
-            elif filtro == "Borde Morfológico":
-                self.imagen_filtrada = borde_morfologico(self.imagen_original)
+            elif filtro == "Borde Morfológico Externo":
+                self.imagen_filtrada = borde_morfologico_externo(self.imagen_original)
+            elif filtro == "Borde Morfológico Interno":
+                self.imagen_filtrada = borde_morfologico_interno(self.imagen_original)      
             elif filtro == "Mediana":
                 self.imagen_filtrada = mediana(self.imagen_original)
 
